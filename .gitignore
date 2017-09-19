@@ -1,6 +1,8 @@
 #Configuration Files
-C:\WebServer\conf
+conf/
 
 Problems.txt
 
-C:\WebServer\WebServer\*.class
+WebServer/*.class
+
+*.swp
