@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class Request {
 	String uri;
-	String body;
+	String body = "";
 	String verb;
 	String httpVersion = "HTTP/1.1";
 	HashMap <String, String> headers = new HashMap <String, String>();
@@ -55,6 +55,7 @@ public class Request {
 	 * @return Verb, URI, HTTP Version, Headers, and bod 
 	 */
 	public String requestGET() {
+		getBody();
 		return String.format("%s %s %s\n"
 				+ "%s\n"
 				+ "%s\n", 
@@ -67,22 +68,20 @@ public class Request {
 	public void getBody() {
 		File htmlFile = new File("C:/WebServer/public_html/index.html");
 		BufferedReader htmlReader = null;
-		ArrayList <String> htmlBody = new ArrayList <String>();
+		String htmlBody = "";
 		
 		try {
 			htmlReader = new BufferedReader(new FileReader(htmlFile));
+			String bodyLine;
+			while ((bodyLine = htmlReader.readLine()) != null) {
+				htmlBody = htmlBody + bodyLine + "\n";
+			}
 		}
 		catch(Exception e) {
 			System.err.printf("HTML File not found: %s\n", e);
 		}
-		
-		
-		
-		while (htmlReader.readLine() != null) {
-			String bodyLine = htmlReader.nextLine();
-			System.out.println(bodyLine);
-			htmlBody.add(bodyLine);
-		}
+		body = htmlBody;
+	
 	}
 	
 	/**
