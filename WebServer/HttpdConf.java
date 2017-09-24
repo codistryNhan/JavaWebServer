@@ -1,5 +1,3 @@
-package WebServer;
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Scanner;
@@ -18,7 +16,8 @@ public class HttpdConf {
 	 * @param fileName Path of file to be called
 	 */
 	public HttpdConf(String fileName){
-		configureHttpd = new ConfigurationReader(fileName);	
+		configureHttpd = new ConfigurationReader(fileName);
+                this.load();
 		//System.out.println("Successfully loaded httpd.conf file");
 	}
 	
@@ -74,7 +73,32 @@ public class HttpdConf {
 	 * 
 	 * @return Document path of index.html
 	 */
-	public String getURI() {
+	public String getDocRoot() {
 		return etc.get("DocumentRoot");
 	}
+
+        public String getAliasValue(String key){
+          return aliases.get(key);
+        }
+
+        public boolean aliasKeyExist(String key){
+          if(aliases.get(key) == null){
+            return false;
+          } else {
+            return true;
+          }
+        }
+
+        public String getScriptAliasValue(String key){
+          return scriptAliases.get(key);
+        }
+
+        public boolean scriptAliasKeyExist(String key){
+          if(scriptAliases.get(key) == null){
+            return false;
+          } else {
+            return true;
+          }
+        }
+
 }
