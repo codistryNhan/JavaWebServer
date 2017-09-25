@@ -9,15 +9,15 @@ public class Resource{
   public Resource(String uri, HttpdConf config){
     //  Remove Quotes on URL
     String url = uri;
-    this.dirIndex = config.get("DirIndex").replaceAll("^\"|\"$", "");
-    this.docRoot = config.get("DocumentRoot").replaceAll("^\"|\"$", "");
+    this.dirIndex = config.get("DirIndex");
+    this.docRoot = config.get("DocumentRoot");
 
     //
     //  If URI is Aliased
     //
 
     if(config.aliasKeyExist(url)){
-      url = config.getAliasValue(url).replaceAll("^\"|\"$", "");
+      url = config.getAliasValue(url);
 
       if(this.isFile(url)){
         this.absolutePath = url;
@@ -30,7 +30,7 @@ public class Resource{
     //
 
     } else if(config.scriptAliasKeyExist(url)){
-      url = config.getScriptAliasValue(url).replaceAll("^\"|\"$", "");
+      url = config.getScriptAliasValue(url);
 
       if(this.isFile(url)){
         this.absolutePath = url;

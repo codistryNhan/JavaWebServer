@@ -74,15 +74,11 @@ public class HttpdConf {
 	 * @return Document path of index.html
 	 */
         public String get(String key){
-          return etc.get(key);
+          return etc.get(key).replaceAll("^\"|\"$", "");
         }
 
-	public String getDocRoot() {
-		return etc.get("DocumentRoot");
-	}
-
         public String getAliasValue(String key){
-          return aliases.get(key);
+          return aliases.get(key).replaceAll("^\"|\"$", "");
         }
 
         public boolean aliasKeyExist(String key){
@@ -94,7 +90,7 @@ public class HttpdConf {
         }
 
         public String getScriptAliasValue(String key){
-          return scriptAliases.get(key);
+          return scriptAliases.get(key).replaceAll("^\"|\"$", "");
         }
 
         public boolean scriptAliasKeyExist(String key){

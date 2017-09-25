@@ -16,7 +16,7 @@ public class SimpleServer{
 
     client = socket.accept();
 
-    HttpdConf config = new HttpdConf("/root/server/config/httpd.conf");
+    HttpdConf config = new HttpdConf("/root/web-server-nguyen-nhan-alejo-norald/config/httpd.conf");
 
     Request req = new Request(client);
 
@@ -27,7 +27,10 @@ public class SimpleServer{
     System.out.println(req.getIp());
 
     Response response = new Response(res);
-    response.send(client.getOutputStream(), 400);
+    response.send(client.getOutputStream(), 200);
+
+    Logger log = new Logger(config.get("LogFile"));
+    log.write(req,response);
 
    // PrintWriter out = new PrintWriter(client.getOutputStream(), true);
    //out.println("Hello");

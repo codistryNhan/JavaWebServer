@@ -65,6 +65,9 @@ public class Response{
 
   }
 
+  public int getResponseCode(){
+    return this.code;
+  }
   //
   //  Create Response Line
   //

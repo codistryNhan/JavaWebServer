@@ -88,6 +88,10 @@ public class Request{
     return this.ipAddress;
   }
 
+  public String getRequestLine(){
+    return this.verb + " " + this.uri + " " + this.httpVersion;
+  }
+
 }
 
 
