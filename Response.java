@@ -39,6 +39,7 @@ public class Response{
                  out.println(fileContent);
                  break;
       default:   out.println(response);
+                 out.close();
                  break;
     }
 
@@ -103,9 +104,10 @@ public class Response{
     return responseLine + responseHeaders;
   }
 
-/*  private boolean fileExist(){
-    try {
-      File file = new File(url)
-    }
-  }*/
+  //
+  //  Check if file exists
+  //
+  public boolean fileExist(){
+    return new File(this.absolutePath).isFile();
+  }
 }

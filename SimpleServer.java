@@ -4,34 +4,41 @@ import java.util.*;
 
 public class SimpleServer{
 
-  public static final int PORT = 3000;
-
   public static void main(String[] args){
 
     try {
 
+    HttpdConf config = new HttpdConf("/root/web-server-nguyen-nhan-alejo-norald/config/httpd.conf");
+    MimeTypes mime = new MimeTypes("/root/web-server-nguyen-nhan-alejo-norald/config/mime.types");
+
+    int PORT = new Integer(config.get("Listen"));
+
     ServerSocket socket = new ServerSocket(PORT);
 
     Socket client = null;
+    OutputStream out = null;
+    while(true){
 
-    client = socket.accept();
+      client = socket.accept();
+      out = client.getOutputStream();
 
-    HttpdConf config = new HttpdConf("/root/web-server-nguyen-nhan-alejo-norald/config/httpd.conf");
+      Request req = new Request(client);
+      Resource res = new Resource(req.getUri(), config);
+      Response response = new Response(res);
 
-    Request req = new Request(client);
+      if(req.getVerb().equals("GET")){
+        if(!response.fileExist()){
+          response.send(out, 404);
+        } else {
+          response.send(out,200);
+        }
+      }
 
-    Resource res = new Resource(req.getUri(), config);
 
-    System.out.println(req.getUri());
-    System.out.println(res.getAbsolutePath());
-    System.out.println(req.getIp());
+      Logger log = new Logger(config.get("LogFile"));
+      log.write(req,response);
 
-    Response response = new Response(res);
-    response.send(client.getOutputStream(), 200);
-
-    Logger log = new Logger(config.get("LogFile"));
-    log.write(req,response);
-
+    }
    // PrintWriter out = new PrintWriter(client.getOutputStream(), true);
    //out.println("Hello");
 

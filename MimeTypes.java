@@ -1,5 +1,3 @@
-package WebServer;
-
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.Iterator;
