@@ -1,5 +1,6 @@
 #Configuration Files
-conf/
+
+*.class
 
 Problems.txt
 

@@ -11,9 +11,11 @@ public class Request{
   private String verb;
   private String httpVersion;
   private HashMap<String, String> headers = new HashMap<String, String>();
+  private String ipAddress;
 
   public Request(Socket input){
 
+    this.ipAddress = input.getRemoteSocketAddress().toString();
     try{
       this.parse(input.getInputStream());
     } catch(Exception e){
@@ -80,6 +82,10 @@ public class Request{
 
   public String getHeader(String key){
     return this.headers.get(key);
+  }
+
+  public String getIp(){
+    return this.ipAddress;
   }
 
 }

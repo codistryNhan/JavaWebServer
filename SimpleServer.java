@@ -22,12 +22,12 @@ public class SimpleServer{
 
     Resource res = new Resource(req.getUri(), config);
 
-    System.out.println(config.aliasKeyExist("/ab/"));
     System.out.println(req.getUri());
     System.out.println(res.getAbsolutePath());
+    System.out.println(req.getIp());
 
     Response response = new Response(res);
-    response.send(client);
+    response.send(client.getOutputStream(), 400);
 
    // PrintWriter out = new PrintWriter(client.getOutputStream(), true);
    //out.println("Hello");

@@ -73,6 +73,10 @@ public class HttpdConf {
 	 * 
 	 * @return Document path of index.html
 	 */
+        public String get(String key){
+          return etc.get(key);
+        }
+
 	public String getDocRoot() {
 		return etc.get("DocumentRoot");
 	}
