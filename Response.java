@@ -42,32 +42,12 @@ public class Response{
                  break;
     }
 
-    /*int fileSize = (int)new File(this.absolutePath).length();
-    char[] fileContent = new char[fileSize];
-
-    FileReader in = new FileReader(this.absolutePath);
-    in.read(fileContent);
-
-    PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-    this.response = "HTTP/1.1 " + code + " " + reasonPhrase + "\n";
-    this.response += this.createHeader("Server", this.serverinfo);
-    this.response += this.createHeader("Date: ", this.date);
-    this.response += this.createHeader("Content-Type", "text/html");
-    this.response += this.createHeader("Content-Length", String.valueOf(fileSize));
-    this.response += "\n";
-    out.print(this.response);
-    out.println(fileContent);
-    */
-
-    //
-    // Code 400
-    //
-
   }
 
   public int getResponseCode(){
     return this.code;
   }
+
   //
   //  Create Response Line
   //

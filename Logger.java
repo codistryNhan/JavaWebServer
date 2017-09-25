@@ -22,12 +22,14 @@ public class Logger{
     int resCode = res.getResponseCode();
 
     String logInput = hostname + " " + date + " " + reqLine + " " + resCode + "\n";
+
     File file = new File(this.filename);
 
     if(!file.exists()){
       file.createNewFile();
 
     }
+
     FileWriter fileOut = new FileWriter(file, true);
     fileOut.write(logInput);
     fileOut.close();
