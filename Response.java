@@ -14,6 +14,7 @@ public class Response{
   private String httpVer = "HTTP/1.1";
 
   public Response(Resource resource){
+    this.resource = resource;
     this.absolutePath = resource.getAbsolutePath();
   }
 
@@ -21,23 +22,45 @@ public class Response{
 
     String response = this.createResponseHeader(code);
     PrintWriter out = new PrintWriter(socketOut, true);
+    int fileSize;
+    //BufferedOutputStream byteOut = new BufferedOutputStream(socketOut);
 
     //
     //  For codes that requiest extra headers/body
     //
     switch(code){
-      case 200:  int fileSize = (int)new File(this.absolutePath).length();
+     case 2001:  fileSize = (int)new File(this.absolutePath).length();
+
+                 response += this.createHeader("Content-Type", resource.getMimeType());
+                 response += this.createHeader("Content-Length", String.valueOf(fileSize));
+                 response += "\n";
+                 out.println(response);
+                 break;
+
+      case 200:  fileSize = (int)new File(this.absolutePath).length();
                  char[] fileContent = new char[fileSize];
 
+                 //FileInputStream in = new FileInputStream(this.absolutePath);
                  FileReader in = new FileReader(this.absolutePath);
                  in.read(fileContent);
 
-                 response += this.createHeader("Content-Type", "text/html");
+                 response += this.createHeader("Content-Type", resource.getMimeType());
                  response += this.createHeader("Content-Length", String.valueOf(fileSize));
                  response += "\n";
                  out.print(response);
                  out.println(fileContent);
                  break;
+
+      case 201:  response += this.createHeader("Content-Type", resource.getMimeType());
+                 response += "\n";
+                 response += this.absolutePath;
+                 out.println(response);
+                 break;
+
+      case 401:  response += this.createHeader("WWW-Authenticate", "Basic realm=\"realm\"");
+                 out.println(response);
+                 break;
+
       default:   out.println(response);
                  out.close();
                  break;
@@ -78,6 +101,8 @@ public class Response{
     String responseHeaders;
 
     switch(code){
+     case 2001: responseLine = this.createResponseLine(200, "OK");
+                break;
       case 200: responseLine = this.createResponseLine(200,"OK");
                 break;
       case 201: responseLine = this.createResponseLine(201, "Created");
@@ -104,10 +129,4 @@ public class Response{
     return responseLine + responseHeaders;
   }
 
-  //
-  //  Check if file exists
-  //
-  public boolean fileExist(){
-    return new File(this.absolutePath).isFile();
-  }
 }

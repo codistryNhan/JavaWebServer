@@ -5,6 +5,7 @@ public class Resource{
   private String absolutePath;
   private String dirIndex;
   private String docRoot;
+  private MimeTypes mime = new MimeTypes("/root/web-server-nguyen-nhan-alejo-norald/config/mime.types");
 
   public Resource(String uri, HttpdConf config){
     //  Remove Quotes on URL
@@ -73,7 +74,7 @@ public class Resource{
   //
   //  Adds '/' to url and appends DirIndex
   //
-  public String appendDirIndex(String url){
+  private String appendDirIndex(String url){
     if (!url.endsWith("/")) {
       url = url + "/";
     }
@@ -84,7 +85,7 @@ public class Resource{
   //
   //  Remove trailing '/' from url and concats DocRoot
   //
-  public String appendDocRoot(String url){
+  private String appendDocRoot(String url){
     String root = this.docRoot;
 
     if(root.endsWith("/")){
@@ -93,5 +94,67 @@ public class Resource{
 
     return url = root + url;
   }
+
+  //
+  //  Check if file exists on the server
+  //
+  public boolean fileExist(){
+    return new File(this.absolutePath).isFile();
+  }
+
+  //
+  //  Creates the resource on the server
+  //
+  public void createResource(String body) throws IOException{
+    File file = new File(this.absolutePath);
+
+    if(file.exists()){
+      file.delete();
+    }
+
+    file.createNewFile();
+
+    FileWriter fileOut = new FileWriter(file, true);
+    fileOut.write(body);
+    fileOut.close();
+  }
+
+  //
+  //  Deletes the resource on the server
+  //
+  public void deleteResource() throws IOException{
+    File file = new File(this.absolutePath);
+
+    file.delete();
+  }
+
+  //
+  //  Get Extension of file
+  //
+  private String getFileExtension(){
+    String extension = "";
+    String filename = this.absolutePath;
+
+    int position = filename.lastIndexOf('.');
+    if(position > 0){
+      extension = filename.substring(position+1);
+    }
+
+    return extension;
+  }
+
+  //
+  //  Get MimeType
+  //
+  public String getMimeType(){
+    String key = this.getFileExtension();
+
+    return mime.get(key);
+  }
+
+  //
+  //
+  //
+
 }
 

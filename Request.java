@@ -10,6 +10,7 @@ public class Request{
   private String uri;
   private String verb;
   private String httpVersion;
+  private String body = "";
   private HashMap<String, String> headers = new HashMap<String, String>();
   private String ipAddress;
 
@@ -47,21 +48,37 @@ public class Request{
     String line, key, value;
     while(true){
       line = scan.nextLine();
+
       if(line.equals("")){
         break;
       }
+
       Scanner scanLine = new Scanner(line);
 
       // Store Key, remove ending ":"
-      key = scanLine.next().replace(":","").trim().toLowerCase();
+      key = scanLine.next().replace(":","").trim();
       // Store Value
-      value = scanLine.nextLine().trim().toLowerCase();
-      headers.put( key, value );
+      value = scanLine.nextLine().trim();
+      this.headers.put( key, value );
     }
 
     //
     //  Parse and store body
     //
+/*    while(true){
+        if(!scan.hasNextLine()){
+          break;
+        }
+
+        line = scan.nextLine();
+
+        if(line.equals("")){
+          break;
+        }
+
+        this.body += line; 
+    }*/
+
   }
 
   public String getVerb(){
@@ -76,8 +93,16 @@ public class Request{
     return this.httpVersion;
   }
 
-  public HashMap getHeaders(){
-    return this.headers;
+  public String getHeaders(){
+    String headers = "";
+    Set<String> keys = this.headers.keySet();
+
+    for(String i : keys){
+      headers += i + ": " + this.headers.get(i) + "\n";
+    }
+    headers += "\n";
+
+    return headers;
   }
 
   public String getHeader(String key){
@@ -89,7 +114,31 @@ public class Request{
   }
 
   public String getRequestLine(){
-    return this.verb + " " + this.uri + " " + this.httpVersion;
+    return this.verb + " " + this.uri + " " + this.httpVersion + "\n";
+  }
+
+  public String getBody(){
+    return this.body;
+  }
+
+  public void displayHeaders(){
+    Set<String> keys = this.headers.keySet();
+
+    for(String i : keys){
+      System.out.print(i + " " + this.headers.get(i) + "\n");
+    }
+  }
+
+  public String toString(){
+    String request;
+
+    request = this.getRequestLine();
+    request += this.getHeaders();
+
+    if(!this.body.isEmpty()){
+      request += this.body;
+    }
+    return request;
   }
 
 }

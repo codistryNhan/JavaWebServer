@@ -22,26 +22,53 @@ public class SimpleServer{
       client = socket.accept();
       out = client.getOutputStream();
 
-      Request req = new Request(client);
-      Resource res = new Resource(req.getUri(), config);
-      Response response = new Response(res);
+      Request request = new Request(client);
+      Resource resource = new Resource(request.getUri(), config);
+      Response response = new Response(resource);
+      System.out.println(request);
 
-      if(req.getVerb().equals("GET")){
-        if(!response.fileExist()){
-          response.send(out, 404);
-        } else {
-          response.send(out,200);
-        }
+      switch(request.getVerb()){
+        case "GET": if(resource.fileExist()){
+                      response.send(out, 200);
+                    } else {
+                      response.send(out,404);
+                    }
+                    break;
+
+        case "HEAD": if(resource.fileExist()){
+                       response.send(out, 2001);
+                     } else {
+                       response.send(out,404);
+                     }
+                     break;
+
+        case "PUT": resource.createResource(request.getBody());
+                    response.send(out, 201);
+                    break;
+
+        case "POST": if(resource.fileExist()){
+                       response.send(out,200);
+                     } else {
+                       response.send(out,404);
+                     }
+                     break;
+        case "DELETE": if(resource.fileExist()){
+                         resource.deleteResource();
+                         response.send(out, 204);
+                       } else {
+                         response.send(out, 404);
+                       }
+                       break;
+
+        default: response.send(out, 400);
+                   break;
       }
 
-
+      //  Log transaction
       Logger log = new Logger(config.get("LogFile"));
-      log.write(req,response);
+      log.write(request,response);
 
     }
-   // PrintWriter out = new PrintWriter(client.getOutputStream(), true);
-   //out.println("Hello");
-
     //client.close();
     } catch(Exception e){
       System.out.println("Error ");
