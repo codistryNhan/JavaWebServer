@@ -29,24 +29,55 @@ public class Request{
   //  Parse and store request message's metadata
   //
 
-  public void parse(InputStream input){
+  public void parse(InputStream input) throws IOException{
 
     //
     //  Parse and store the verb, uri, and httpVersion of the initial request line
     //
 
-    Scanner scan = new Scanner(input);
+    BufferedReader in = new BufferedReader( new InputStreamReader(input) );
+    String line = in.readLine();
+    char[] buff;
+    Scanner scan = new Scanner(line);
+
+    //Scanner scan = new Scanner(input);
+
     this.verb = scan.next();
     this.uri = scan.next();
     this.httpVersion = scan.next();
-    scan.nextLine();
+    // scan.nextLine();
 
     //
     //  Parse and store headers
     //
 
-    String line, key, value;
-    while(true){
+    String key, value;
+
+    while( (line = in.readLine()) != null){
+
+      if(line.equals("")){
+        break;
+      }
+
+      scan = new Scanner(line);
+
+      // Store Key, remove ending ":"
+      key = scan.next().replace(":","").trim();
+      // Store Value
+      value = scan.nextLine().trim();
+      this.headers.put( key, value );
+    }
+
+    if( (this.headers.containsKey("Content-Length")) ){
+      int size = new Integer(this.headers.get("Content-Length"));
+      buff = new char[size];
+
+      in.read(buff, 0, size);
+
+      this.body = new String(buff);
+      System.out.println(this.body);
+    }
+   /* while(true){
       line = scan.nextLine();
 
       if(line.equals("")){
@@ -60,23 +91,16 @@ public class Request{
       // Store Value
       value = scanLine.nextLine().trim();
       this.headers.put( key, value );
-    }
-
+    }*/
     //
     //  Parse and store body
     //
-/*    while(true){
-        if(!scan.hasNextLine()){
-          break;
-        }
+/*    while( (line = in.readLine()) != null ){
+      if(line.equals("")){
+        break;
+      }
 
-        line = scan.nextLine();
-
-        if(line.equals("")){
-          break;
-        }
-
-        this.body += line; 
+      this.body += line;
     }*/
 
   }

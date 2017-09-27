@@ -1,7 +1,10 @@
 import java.io.*;
+import java.nio.file.Files;
 import java.net.*;
 import java.util.*;
 import java.time.LocalDateTime;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 
 public class Response{
   public int code;
@@ -12,6 +15,10 @@ public class Response{
   private String serverinfo = System.getProperty("os.name") + " " + System.getProperty("os.version");
   private String date = LocalDateTime.now().toString();
   private String httpVer = "HTTP/1.1";
+
+  public Response(){
+
+  }
 
   public Response(Resource resource){
     this.resource = resource;
@@ -27,7 +34,7 @@ public class Response{
 
     //
     //  For codes that requiest extra headers/body
-    //
+    //  2001 for HEAD and POST Success
     switch(code){
      case 2001:  fileSize = (int)new File(this.absolutePath).length();
 
@@ -37,18 +44,37 @@ public class Response{
                  out.println(response);
                  break;
 
-      case 200:  fileSize = (int)new File(this.absolutePath).length();
-                 char[] fileContent = new char[fileSize];
-
-                 //FileInputStream in = new FileInputStream(this.absolutePath);
-                 FileReader in = new FileReader(this.absolutePath);
-                 in.read(fileContent);
-
+      case 200:  fileSize = fileSize = (int)new File(this.absolutePath).length();
                  response += this.createHeader("Content-Type", resource.getMimeType());
                  response += this.createHeader("Content-Length", String.valueOf(fileSize));
                  response += "\n";
                  out.print(response);
-                 out.println(fileContent);
+
+                 if(resource.isImage()){
+                   File image = new File(this.absolutePath);
+                   //byte[] imageFile = Files.readAllBytes(image.toPath());
+                   /*BufferedImage image = ImageIO.read(new File(this.absolutePath));
+
+                   ByteArrayOutputStream fileContent = new ByteArrayOutputStream();
+                   ImageIO.write(image, resource.getFileExtension(), socketOut);*/
+                   //String imageOut = "<img src=\"data:" + resource.getMimeType() + ";base64,\"" + imageFile +  " />";
+                   //out.write(imageOut);
+                   //out.flush();
+                   //out.close();
+                   Files.copy(image.toPath(), socketOut);
+                   //socketOut.close();
+
+                 } else {
+                   char[] fileContent = new char[fileSize];
+
+                   //FileInputStream in = new FileInputStream(this.absolutePath);
+                   FileReader in = new FileReader(this.absolutePath);
+                   in.read(fileContent);
+
+                   out.write(fileContent);
+                   out.close();
+                 }
+
                  break;
 
       case 201:  response += this.createHeader("Content-Type", resource.getMimeType());
@@ -62,10 +88,9 @@ public class Response{
                  break;
 
       default:   out.println(response);
-                 out.close();
                  break;
     }
-
+    out.close();
   }
 
   public int getResponseCode(){

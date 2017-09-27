@@ -131,7 +131,7 @@ public class Resource{
   //
   //  Get Extension of file
   //
-  private String getFileExtension(){
+  public String getFileExtension(){
     String extension = "";
     String filename = this.absolutePath;
 
@@ -153,8 +153,19 @@ public class Resource{
   }
 
   //
+  //  Check if file is an image
   //
-  //
+  public boolean isImage(){
+    String fileExtension = this.getFileExtension();
 
+    switch(fileExtension){
+      case "jpg": return true;
+      case "jpeg": return true;
+      case "jpe": return true;
+      case "gif": return true;
+      case "png": return true;
+      default: return false;
+    }
+  }
 }
 
