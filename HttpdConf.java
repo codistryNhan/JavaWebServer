@@ -33,16 +33,16 @@ public class HttpdConf {
 			String configure;
 			
 			configure = httpdLine.next();
-			System.out.printf("Adding %s\n", configure);
+			//System.out.printf("Adding %s\n", configure);
 			
 			if (configure.matches("Alias")) {
 				symbolicPath = httpdLine.next();
-				System.out.printf("Adding Alias. Symbolic Path: %s\n", symbolicPath);
+				//System.out.printf("Adding Alias. Symbolic Path: %s\n", symbolicPath);
 				aliases.put(symbolicPath, httpdLine.next());
 			}
 			else if(configure.matches("ScriptAlias")) {
 				symbolicPath = httpdLine.next();
-				System.out.printf("Adding Script Alias. Symbolic Path: %s\n", symbolicPath);
+				//System.out.printf("Adding Script Alias. Symbolic Path: %s\n", symbolicPath);
 				scriptAliases.put(symbolicPath, httpdLine.next());	
 			}
 			else {
@@ -60,12 +60,12 @@ public class HttpdConf {
 	 * Loads files from httpd.conf
 	 */
 	public void load(){
-		System.out.println("-------Configuring Httpd File-------");
+		//System.out.println("-------Configuring Httpd File-------");
 		
 		configureHttpd.load();
 		addToMap();
 		
-		System.out.println("Httpd File Configured\n\n");
+		//System.out.println("Httpd File Configured\n\n");
 	}
 	
 	/**
